@@ -18,6 +18,13 @@ public class GameController : MonoBehaviour
     public GameObject minimap_object; //Minimap in lower right
     public GameObject minimap_object_2; //Second minimap for split screen
 
+    //GAME SETTINGS
+    public Slider minimap_size_slider; //Slider that determines minimap size
+    public InputField minimap_size_input; //Input that manually determines minimap size
+    public Slider camera_angle_slider; //Slider that determines camera angle
+    public InputField camera_angle_input; //Input that manually determines camera angle
+
+
     //PLAYER 1 UI
     public Camera P1_camera; //Controls player one camera when in split screen mode
     public Text upgrade_text; //Text for upgrade button in shop menu
@@ -80,6 +87,8 @@ public class GameController : MonoBehaviour
     [HideInInspector] public List<(string, GameObject)> slowed_ghost_list = new List<(string, GameObject)>(); //ITEM1: List of ghost (marked by ghost names) that are slowed by Duncan's aura; ITEM2: the corresponding slow symbol
     [HideInInspector] public List<Kid> kid_list = new List<Kid>(); //Stores a Kid for each player
     [HideInInspector] public List<Region> kid_region_list = new List<Region>(); //Stores the region of each kid
+    [HideInInspector] public int minimap_anchors_set;
+    [HideInInspector] public bool minimap_anchors_being_set;
 
 
 
@@ -105,6 +114,8 @@ public class GameController : MonoBehaviour
         level_complete = false;
         level_end_timer = 2.0f;
         spawn_green_ghost = false;
+        minimap_anchors_set = 0;
+        minimap_anchors_being_set = false;
 
         if(Scene_Switch_Data.main_menu == false){ //If level 1 start
             level_1_song = level_1_song_object.GetComponent<AudioSource>();
@@ -114,6 +125,10 @@ public class GameController : MonoBehaviour
             plot_song = plot_text_music_object.GetComponent<AudioSource>();
             plot_song.Play();
             plot_song.loop = true;
+
+            //Set game setting values to game objects
+            //Game_Settings.minimap_center_anchor_x = minimap_object.transform.localPosition.x;
+            //Game_Settings.minimap_center_anchor_y = minimap_object.transform.localPosition.y;
         }
         else{ //If tutorial start
             main_menu_song = GetComponent<AudioSource>();
@@ -128,11 +143,14 @@ public class GameController : MonoBehaviour
     {
         if(main_menu_active == false) game_utilities.pause_game(); //Pauses Game 
         game_utilities.updateUIText(); //Updates UI text
+        game_utilities.adjustPlayerUI();
     }
 
     //Updates with respect to a fixed deltaTime of 0.02 -> used for time-based actions && positioning changes
     void FixedUpdate()
     {
+        //Debug.Log(minimap_size_slider.value);
+
         //Check if every kid is in the last region
         bool not_all_in_final_zone = false;
         for(int k = 0; k < kid_list.Count; k++){

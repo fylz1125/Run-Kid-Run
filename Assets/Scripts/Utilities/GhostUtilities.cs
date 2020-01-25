@@ -15,6 +15,7 @@ public class GhostUtilities : MonoBehaviour
         green_ghost_timer = 0f;
         green_ghost_name_count = 0;
     }
+
     void FixedUpdate(){
         GameController gc = GameObject.Find("ScriptObject").GetComponent<GameController>(); //Grabs GameController script data
 

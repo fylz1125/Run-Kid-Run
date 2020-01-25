@@ -95,7 +95,7 @@ public class KidUtilities : MonoBehaviour
         rot.Set(0f, 0f, 0f, 1f);  //Defines initial Quanternion of kid
 
         /********** TESTING ***********/
-        if(Scene_Switch_Data.DEVELOPER_spawn_last_region) pos = new Vector3(50f, 0f, -40f);
+        if(DEVELOPER_SETTINGS.DEVELOPER_spawn_last_region) pos = new Vector3(50f, 0f, -40f);
         /********** END TESTING ***********/
 
         //Make the kids!
@@ -124,7 +124,7 @@ public class KidUtilities : MonoBehaviour
 
             /********** TESTING ***********/
             
-            if(Scene_Switch_Data.DEVELOPER_spawn_last_region){
+            if(DEVELOPER_SETTINGS.DEVELOPER_spawn_last_region){
                 new_kid.region = gc.region_list[12];
                 new_kid.region_index = 12;
                 new_kid.upgrade_points = 15;

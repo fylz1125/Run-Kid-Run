@@ -7,6 +7,47 @@ using UnityEngine.SceneManagement;
 /*************** FUNCTIONS FOR CONTROLLING GENERAL GAMEPLAY *****************/
 public class GameUtilities : MonoBehaviour
 {
+    //Sets game UI based on settings menu values
+    public void adjustPlayerUI(){
+        GameController gc = GameObject.Find("ScriptObject").GetComponent<GameController>(); //Grabs GameController script data
+
+        //Adjust minimap size
+        Game_Settings.minimap_size_multiplier = gc.minimap_size_slider.value * 2f;
+        if(gc.minimap_object != null){
+            if(gc.minimap_anchors_set < 2){
+                StartCoroutine(setAnchors());
+                return;
+            }
+            gc.minimap_object.transform.localScale = new Vector3(Game_Settings.minimap_size_multiplier, Game_Settings.minimap_size_multiplier, 1);
+
+            float new_position = 100f * Game_Settings.minimap_size_multiplier;
+            //gc.minimap_object.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(1f,0f);
+
+            gc.minimap_object.transform.localPosition = new Vector3(-1f * new_position + Screen.width / 2 + 95, new_position - Screen.height / 2 - 48, 0);
+
+            Debug.Log(gc.minimap_object.transform.localPosition.x);
+            //Debug.Log(Screen.width);
+            //Debug.Log(Screen.height);
+            //Debug.Log(new_position);
+            //Debug.Log("Game Settings: " + Game_Settings.minimap_center_anchor_y);
+            //Debug.Log("Position: " + gc.minimap_object.transform.position.x);
+            //Debug.Log("Game Settings: " + Game_Settings.minimap_center_anchor_x);
+            //Debug.Log("Y Assignment: " + new_position);
+            //Debug.Log("Multiplier: " + Game_Settings.minimap_size_multiplier + "; X: " + gc.minimap_object.transform.localPosition.x + "; Y: " + gc.minimap_object.transform.localPosition.y);
+            //Debug.Log("Multiplier: " + Game_Settings.minimap_size_multiplier + "; X: " + gc.minimap_object.transform.position.x + "; Y: " + gc.minimap_object.transform.position.y);
+        }
+        
+    }
+
+    IEnumerator setAnchors(){
+        GameController gc = GameObject.Find("ScriptObject").GetComponent<GameController>(); //Grabs GameController script data
+        yield return new WaitForSecondsRealtime(0.04f);
+        Game_Settings.minimap_center_anchor_x = gc.minimap_object.transform.position.x;
+        Game_Settings.minimap_center_anchor_y = gc.minimap_object.transform.position.y;
+        Debug.Log("anchor set: " + gc.minimap_anchors_set);
+        gc.minimap_anchors_set += 1;
+    }
+
     //Pauses the game by stopping all movement
     public void pause_game(){
         GameController gc = GameObject.Find("ScriptObject").GetComponent<GameController>(); //Grabs GameController script data
